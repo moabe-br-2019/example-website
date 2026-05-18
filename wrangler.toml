@@ -13,7 +13,7 @@ binding = "ASSETS"
 [[d1_databases]]
 binding = "DB"
 database_name = "example-full-website-db"
-database_id = "TROCAR-COM-ID-RETORNADO-PELO-WRANGLER"
+database_id = "d66c5fb5-613c-4a11-9e34-5363ac8ca8c9"
 migrations_dir = "./migrations"
 
 # KV usado pelo Astro Sessions (Cloudflare adapter). Criar com:
