@@ -34,3 +34,6 @@ pnpm-debug.log*
 .vscode/*
 !.vscode/settings.json
 !.vscode/extensions.json
+
+# Claude Code local permission overrides (user-specific)
+.claude/settings.local.json

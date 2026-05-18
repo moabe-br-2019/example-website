@@ -7,18 +7,18 @@ export const prerender = false;
 
 export const POST: APIRoute = async ({ request, locals }) => {
   const env = locals.runtime?.env;
-  if (!env) return json({ error: 'runtime indisponível' }, 500);
+  if (!env) return json({ error: 'runtime unavailable' }, 500);
 
   let raw: unknown;
   try {
     raw = await request.json();
   } catch {
-    return json({ error: 'payload inválido' }, 400);
+    return json({ error: 'invalid payload' }, 400);
   }
 
   const parsed = approveSchema.safeParse(raw);
   if (!parsed.success) {
-    return json({ error: 'dados inválidos' }, 400);
+    return json({ error: 'invalid data' }, 400);
   }
   const { token, decision, comment } = parsed.data;
 
@@ -30,14 +30,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
     .bind(tokenHash)
     .first<ProjectApproval>();
 
-  if (!row) return json({ error: 'token inválido' }, 404);
+  if (!row) return json({ error: 'invalid token' }, 404);
   if (row.status !== 'pending') {
-    return json({ error: 'esta aprovação já foi decidida' }, 409);
+    return json({ error: 'this approval has already been decided' }, 409);
   }
 
   const now = Date.now();
   if (row.expires_at !== null && row.expires_at < now) {
-    return json({ error: 'link expirado' }, 410);
+    return json({ error: 'link expired' }, 410);
   }
 
   try {
@@ -51,10 +51,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
       .run();
   } catch (err) {
     console.error('approve update failed', err);
-    return json({ error: 'erro ao salvar' }, 500);
+    return json({ error: 'failed to save' }, 500);
   }
 
-  // Notificação (best-effort).
+  // Notification (best-effort).
   if (env.RESEND_API_KEY && env.CONTACT_FROM_EMAIL && env.APPROVAL_NOTIFY_EMAIL) {
     try {
       await sendEmail({
@@ -62,7 +62,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         from: env.CONTACT_FROM_EMAIL,
         to: env.APPROVAL_NOTIFY_EMAIL,
         replyTo: row.client_email,
-        subject: `[${decision === 'approved' ? 'APROVADO' : 'REJEITADO'}] ${row.project_title ?? row.project_slug}`,
+        subject: `[${decision === 'approved' ? 'APPROVED' : 'REJECTED'}] ${row.project_title ?? row.project_slug}`,
         html: renderNotifyEmail({
           decision,
           clientName: row.client_name,
@@ -93,11 +93,11 @@ function renderNotifyEmail(d: {
   projectTitle: string;
   comment: string | null;
 }): string {
-  const verb = d.decision === 'approved' ? 'aprovou' : 'rejeitou';
+  const verb = d.decision === 'approved' ? 'approved' : 'rejected';
   return `
-    <h2>Projeto ${d.decision === 'approved' ? 'APROVADO' : 'REJEITADO / pedido de ajustes'}</h2>
-    <p><strong>${escapeHtml(d.clientName)}</strong> &lt;${escapeHtml(d.clientEmail)}&gt; ${verb} o projeto:</p>
+    <h2>Project ${d.decision === 'approved' ? 'APPROVED' : 'REJECTED / changes requested'}</h2>
+    <p><strong>${escapeHtml(d.clientName)}</strong> &lt;${escapeHtml(d.clientEmail)}&gt; ${verb} the project:</p>
     <p><strong>${escapeHtml(d.projectTitle)}</strong></p>
-    ${d.comment ? `<hr><p><em>Comentário do cliente:</em></p><p style="white-space:pre-wrap">${escapeHtml(d.comment)}</p>` : ''}
+    ${d.comment ? `<hr><p><em>Client comment:</em></p><p style="white-space:pre-wrap">${escapeHtml(d.comment)}</p>` : ''}
   `;
 }

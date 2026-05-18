@@ -4,16 +4,26 @@ export const prerender = true;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { reader } from '../lib/keystatic';
 
-const [settings, servicesRaw] = await Promise.all([
+const [settings, servicesRaw, projectsRaw] = await Promise.all([
   reader.singletons.siteSettings.read(),
   reader.collections.services.all(),
+  reader.collections.projects.all(),
 ]);
 
 const services = servicesRaw
   .map((s) => ({ slug: s.slug, ...s.entry }))
   .sort((a, b) => a.order - b.order);
 
-const siteName = settings?.siteName ?? 'Portfólio';
+const projects = projectsRaw
+  .map((p) => ({ slug: p.slug, ...p.entry }))
+  .sort((a, b) => {
+    const ad = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
+    const bd = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
+    return bd - ad;
+  })
+  .slice(0, 3);
+
+const siteName = settings?.siteName ?? 'Portfolio';
 const tagline = settings?.tagline ?? '';
 ---
 
@@ -22,9 +32,9 @@ const tagline = settings?.tagline ?? '';
     <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
       <a href="/" class="text-lg font-semibold">{siteName}</a>
       <nav class="flex gap-6 text-sm text-neutral-300">
-        <a href="/servicos" class="hover:text-white">Serviços</a>
-        <a href="/projetos" class="hover:text-white">Projetos</a>
-        <a href="/contato" class="hover:text-white">Contato</a>
+        <a href="/services" class="hover:text-white">Services</a>
+        <a href="/projects" class="hover:text-white">Projects</a>
+        <a href="/contact" class="hover:text-white">Contact</a>
       </nav>
     </div>
   </header>
@@ -35,22 +45,22 @@ const tagline = settings?.tagline ?? '';
         {tagline || siteName}
       </h1>
       <p class="mx-auto mt-6 max-w-2xl text-lg text-neutral-400">
-        Estratégia, design e desenvolvimento para marcas que querem crescer no digital.
+        Strategy, design and development for brands that want to grow online.
       </p>
       <div class="mt-10 flex justify-center gap-3">
-        <a href="/contato" class="rounded-md bg-white px-5 py-2.5 text-sm font-medium text-neutral-900 hover:bg-neutral-200">
-          Iniciar projeto
+        <a href="/contact" class="rounded-md bg-white px-5 py-2.5 text-sm font-medium text-neutral-900 hover:bg-neutral-200">
+          Start a project
         </a>
-        <a href="/projetos" class="rounded-md border border-neutral-700 px-5 py-2.5 text-sm font-medium text-neutral-200 hover:border-neutral-500">
-          Ver portfólio
+        <a href="/projects" class="rounded-md border border-neutral-700 px-5 py-2.5 text-sm font-medium text-neutral-200 hover:border-neutral-500">
+          See work
         </a>
       </div>
     </section>
 
     <section class="border-t border-neutral-800 bg-neutral-900/40">
       <div class="mx-auto max-w-6xl px-6 py-20">
-        <h2 class="text-3xl font-semibold">Serviços</h2>
-        <p class="mt-2 text-neutral-400">O que entregamos.</p>
+        <h2 class="text-3xl font-semibold">Services</h2>
+        <p class="mt-2 text-neutral-400">What we deliver.</p>
         <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((s) => (
             <article class="rounded-lg border border-neutral-800 bg-neutral-950 p-6 transition hover:border-neutral-600">
@@ -59,14 +69,44 @@ const tagline = settings?.tagline ?? '';
               </div>
               <h3 class="text-lg font-semibold">{s.title}</h3>
               <p class="mt-2 text-sm text-neutral-400">{s.description}</p>
-              <a href={`/servicos/${s.slug}`} class="mt-4 inline-block text-sm text-neutral-300 hover:text-white">
-                Saber mais →
+              <a href={`/services/${s.slug}`} class="mt-4 inline-block text-sm text-neutral-300 hover:text-white">
+                Learn more →
               </a>
             </article>
           ))}
         </div>
       </div>
     </section>
+
+    {projects.length > 0 && (
+      <section class="border-t border-neutral-800">
+        <div class="mx-auto max-w-6xl px-6 py-20">
+          <div class="flex items-end justify-between">
+            <div>
+              <h2 class="text-3xl font-semibold">Latest projects</h2>
+              <p class="mt-2 text-neutral-400">Some of the work we've shipped recently.</p>
+            </div>
+            <a href="/projects" class="hidden text-sm text-neutral-300 hover:text-white sm:inline">
+              See all →
+            </a>
+          </div>
+          <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {projects.map((p) => (
+              <a href={`/projects/${p.slug}`} class="block overflow-hidden rounded-lg border border-neutral-800 bg-neutral-950 transition hover:border-neutral-500">
+                {p.coverImage && (
+                  <img src={p.coverImage} alt={p.title} class="aspect-video w-full object-cover" />
+                )}
+                <div class="p-5">
+                  <p class="text-xs uppercase tracking-wider text-neutral-500">{p.client}</p>
+                  <h3 class="mt-1 text-lg font-semibold">{p.title}</h3>
+                  <p class="mt-2 text-sm text-neutral-400">{p.summary}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
   </main>
 
   <footer class="border-t border-neutral-800">

@@ -1,12 +1,12 @@
 {
-  "siteName": "Portfólio Exemplo",
-  "tagline": "Construímos sites e aplicações que vendem.",
-  "contactEmail": "contato@exemplo.com",
-  "phone": "(11) 99999-9999",
+  "siteName": "Example Portfolio",
+  "tagline": "We build websites and apps that sell.",
+  "contactEmail": "contact@example.com",
+  "phone": "+1 (555) 555-5555",
   "whatsapp": "5511999999999",
   "social": {
-    "instagram": "https://instagram.com/exemplo",
-    "linkedin": "https://linkedin.com/company/exemplo",
-    "github": "https://github.com/exemplo"
+    "instagram": "https://instagram.com/example",
+    "linkedin": "https://linkedin.com/company/example",
+    "github": "https://github.com/example"
   }
 }

@@ -10,15 +10,15 @@ const services = servicesRaw
   .sort((a, b) => a.order - b.order);
 ---
 
-<BaseLayout title="Serviços">
+<BaseLayout title="Services">
   <main class="mx-auto max-w-6xl px-6 py-16">
-    <a href="/" class="text-sm text-neutral-400 hover:text-white">← Início</a>
-    <h1 class="mt-4 text-4xl font-bold">Serviços</h1>
-    <p class="mt-2 text-neutral-400">Todas as áreas em que atuamos.</p>
+    <a href="/" class="text-sm text-neutral-400 hover:text-white">← Home</a>
+    <h1 class="mt-4 text-4xl font-bold">Services</h1>
+    <p class="mt-2 text-neutral-400">Every area we work in.</p>
 
     <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {services.map((s) => (
-        <a href={`/servicos/${s.slug}`} class="block rounded-lg border border-neutral-800 bg-neutral-950 p-6 transition hover:border-neutral-500">
+        <a href={`/services/${s.slug}`} class="block rounded-lg border border-neutral-800 bg-neutral-950 p-6 transition hover:border-neutral-500">
           <h2 class="text-xl font-semibold">{s.title}</h2>
           <p class="mt-2 text-sm text-neutral-400">{s.description}</p>
         </a>

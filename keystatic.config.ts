@@ -10,16 +10,16 @@ export default config({
     : { kind: 'local' },
 
   ui: {
-    brand: { name: 'Portfólio' },
+    brand: { name: 'Portfolio' },
     navigation: {
-      Conteúdo: ['services', 'projects', 'testimonials'],
-      Configurações: ['siteSettings'],
+      Content: ['services', 'projects', 'testimonials'],
+      Settings: ['siteSettings'],
     },
   },
 
   collections: {
     services: collection({
-      label: 'Serviços',
+      label: 'Services',
       slugField: 'title',
       path: 'content/services/*',
       format: { contentField: 'content' },
@@ -27,31 +27,31 @@ export default config({
       columns: ['title', 'order'],
       schema: {
         title: fields.slug({
-          name: { label: 'Título' },
+          name: { label: 'Title' },
           slug: { label: 'Slug (URL)' },
         }),
         description: fields.text({
-          label: 'Descrição curta',
-          description: 'Aparece nos cards de serviço (até ~140 caracteres).',
+          label: 'Short description',
+          description: 'Used on service cards (up to ~140 characters).',
           multiline: true,
           validation: { length: { max: 160 } },
         }),
         icon: fields.text({
-          label: 'Ícone (nome lucide)',
-          description: 'Ex: "code", "palette", "rocket". Lista em lucide.dev/icons',
+          label: 'Icon (lucide name)',
+          description: 'e.g. "code", "palette", "rocket". Full list at lucide.dev/icons',
         }),
         order: fields.integer({
-          label: 'Ordem de exibição',
+          label: 'Display order',
           defaultValue: 0,
         }),
         content: fields.markdoc({
-          label: 'Conteúdo (página do serviço)',
+          label: 'Service page content',
         }),
       },
     }),
 
     projects: collection({
-      label: 'Projetos / Cases',
+      label: 'Projects / Cases',
       slugField: 'title',
       path: 'content/projects/*',
       format: { contentField: 'content' },
@@ -59,17 +59,17 @@ export default config({
       columns: ['title', 'client', 'publishedAt'],
       schema: {
         title: fields.slug({
-          name: { label: 'Título' },
+          name: { label: 'Title' },
           slug: { label: 'Slug (URL)' },
         }),
-        client: fields.text({ label: 'Cliente' }),
+        client: fields.text({ label: 'Client' }),
         summary: fields.text({
-          label: 'Resumo',
+          label: 'Summary',
           multiline: true,
           validation: { length: { max: 280 } },
         }),
         coverImage: fields.image({
-          label: 'Imagem de capa',
+          label: 'Cover image',
           directory: 'public/images/projects',
           publicPath: '/images/projects/',
         }),
@@ -77,31 +77,31 @@ export default config({
           fields.text({ label: 'Tag' }),
           { label: 'Tags', itemLabel: (p) => p.value },
         ),
-        publishedAt: fields.date({ label: 'Publicado em' }),
-        content: fields.markdoc({ label: 'Descrição do projeto' }),
+        publishedAt: fields.date({ label: 'Published at' }),
+        content: fields.markdoc({ label: 'Project description' }),
       },
     }),
 
     testimonials: collection({
-      label: 'Depoimentos',
+      label: 'Testimonials',
       slugField: 'author',
       path: 'content/testimonials/*',
       format: { data: 'json' },
       columns: ['author', 'company'],
       schema: {
         author: fields.slug({
-          name: { label: 'Autor' },
+          name: { label: 'Author' },
           slug: { label: 'Slug' },
         }),
-        role: fields.text({ label: 'Cargo' }),
-        company: fields.text({ label: 'Empresa' }),
+        role: fields.text({ label: 'Role' }),
+        company: fields.text({ label: 'Company' }),
         quote: fields.text({
-          label: 'Depoimento',
+          label: 'Quote',
           multiline: true,
           validation: { length: { min: 20, max: 600 } },
         }),
         avatar: fields.image({
-          label: 'Foto (opcional)',
+          label: 'Photo (optional)',
           directory: 'public/images/testimonials',
           publicPath: '/images/testimonials/',
         }),
@@ -111,29 +111,29 @@ export default config({
 
   singletons: {
     siteSettings: singleton({
-      label: 'Configurações do site',
+      label: 'Site settings',
       path: 'content/settings/site',
       format: { data: 'json' },
       schema: {
-        siteName: fields.text({ label: 'Nome do site' }),
+        siteName: fields.text({ label: 'Site name' }),
         tagline: fields.text({
-          label: 'Slogan',
+          label: 'Tagline',
           multiline: true,
         }),
         contactEmail: fields.text({
-          label: 'Email de contato',
+          label: 'Contact email',
           validation: { isRequired: true },
         }),
-        phone: fields.text({ label: 'Telefone' }),
+        phone: fields.text({ label: 'Phone' }),
         whatsapp: fields.text({
-          label: 'WhatsApp (somente números, com DDI)',
-          description: 'Ex: 5511999999999',
+          label: 'WhatsApp (digits only, with country code)',
+          description: 'e.g. 5511999999999',
         }),
         social: fields.object({
           instagram: fields.url({ label: 'Instagram' }),
           linkedin: fields.url({ label: 'LinkedIn' }),
           github: fields.url({ label: 'GitHub' }),
-        }, { label: 'Redes sociais' }),
+        }, { label: 'Social' }),
       },
     }),
   },

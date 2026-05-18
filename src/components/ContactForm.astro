@@ -10,19 +10,19 @@ const formId = 'contact-form';
   class="space-y-5"
   novalidate
 >
-  <!-- honeypot — escondido para humanos, atrai bots -->
+  <!-- honeypot — hidden from humans, lures bots -->
   <div class="absolute left-[-9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
     <label>
-      Não preencha este campo
+      Don't fill in this field
       <input type="text" name="website" tabindex="-1" autocomplete="off" />
     </label>
   </div>
 
-  <input type="hidden" name="source" value="contato" />
+  <input type="hidden" name="source" value="contact" />
 
   <div class="grid gap-5 sm:grid-cols-2">
     <label class="block">
-      <span class="mb-1 block text-sm text-neutral-300">Nome <span class="text-red-400">*</span></span>
+      <span class="mb-1 block text-sm text-neutral-300">Name <span class="text-red-400">*</span></span>
       <input
         type="text"
         name="name"
@@ -48,7 +48,7 @@ const formId = 'contact-form';
 
   <div class="grid gap-5 sm:grid-cols-2">
     <label class="block">
-      <span class="mb-1 block text-sm text-neutral-300">Telefone</span>
+      <span class="mb-1 block text-sm text-neutral-300">Phone</span>
       <input
         type="tel"
         name="phone"
@@ -58,7 +58,7 @@ const formId = 'contact-form';
       />
     </label>
     <label class="block">
-      <span class="mb-1 block text-sm text-neutral-300">Assunto</span>
+      <span class="mb-1 block text-sm text-neutral-300">Subject</span>
       <input
         type="text"
         name="subject"
@@ -69,7 +69,7 @@ const formId = 'contact-form';
   </div>
 
   <label class="block">
-    <span class="mb-1 block text-sm text-neutral-300">Mensagem <span class="text-red-400">*</span></span>
+    <span class="mb-1 block text-sm text-neutral-300">Message <span class="text-red-400">*</span></span>
     <textarea
       name="message"
       required
@@ -89,7 +89,7 @@ const formId = 'contact-form';
       type="submit"
       class="rounded-md bg-white px-5 py-2.5 text-sm font-medium text-neutral-900 hover:bg-neutral-200 disabled:cursor-not-allowed disabled:opacity-50"
     >
-      Enviar mensagem
+      Send message
     </button>
     <p id={`${formId}-status`} class="text-sm" aria-live="polite"></p>
   </div>
@@ -111,7 +111,7 @@ const formId = 'contact-form';
       ev.preventDefault();
       const btn = form.querySelector('button[type=submit]');
       btn.disabled = true;
-      status.textContent = 'Enviando...';
+      status.textContent = 'Sending...';
       status.className = 'text-sm text-neutral-400';
 
       try {
@@ -124,14 +124,14 @@ const formId = 'contact-form';
         const body = await res.json().catch(() => ({}));
 
         if (res.ok && body.ok) {
-          window.location.href = '/contato/obrigado';
+          window.location.href = '/contact/thank-you';
           return;
         }
-        const msg = body.error ?? `Erro ${res.status}`;
+        const msg = body.error ?? `Error ${res.status}`;
         status.textContent = msg;
         status.className = 'text-sm text-red-400';
       } catch (err) {
-        status.textContent = 'Falha de conexão. Tente novamente.';
+        status.textContent = 'Network error. Please try again.';
         status.className = 'text-sm text-red-400';
       } finally {
         btn.disabled = false;

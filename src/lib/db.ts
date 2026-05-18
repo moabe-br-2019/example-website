@@ -35,7 +35,7 @@ export function getDB(locals: APIContext['locals']): D1Database {
   const db = locals.runtime?.env?.DB;
   if (!db) {
     throw new Error(
-      'D1 binding "DB" não encontrado. Verifique wrangler.toml e rode `npm run db:create` se ainda não criou o banco.',
+      'D1 binding "DB" not found. Check wrangler.toml and run `npm run db:create` if you haven\'t created the database yet.',
     );
   }
   return db;

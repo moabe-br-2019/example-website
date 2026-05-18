@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 export const contactSchema = z.object({
-  name: z.string().trim().min(2, 'Nome muito curto').max(120),
-  email: z.string().trim().email('Email inválido').max(200),
+  name: z.string().trim().min(2, 'Name too short').max(120),
+  email: z.string().trim().email('Invalid email').max(200),
   phone: z
     .string()
     .trim()
@@ -15,11 +15,11 @@ export const contactSchema = z.object({
     .max(200)
     .optional()
     .transform((v) => (v ? v : null)),
-  message: z.string().trim().min(10, 'Mensagem muito curta').max(5000),
+  message: z.string().trim().min(10, 'Message too short').max(5000),
   source: z.string().trim().max(80).optional().nullable(),
-  // Honeypot — campo escondido. Bots geralmente preenchem.
+  // Honeypot — hidden field. Bots usually fill it in.
   website: z.string().max(0).optional().nullable(),
-  // Turnstile token (opcional — só validado se CF_TURNSTILE_SECRET estiver definido).
+  // Turnstile token (optional — only validated if CF_TURNSTILE_SECRET is set).
   'cf-turnstile-response': z.string().optional().nullable(),
 });
 

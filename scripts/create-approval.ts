@@ -1,15 +1,15 @@
 /**
- * Gera um link de aprovação para o cliente.
+ * Generates an approval link for the client.
  *
- * Uso:
+ * Usage:
  *   npm run approval:create -- --project=<slug> --name="..." --email=... [--days=7] [--remote] [--base-url=https://...]
  *
- * Fluxo:
- *   1. Gera token aleatório (32 bytes, base64url) — só aparece no link.
- *   2. Calcula SHA-256 do token (token_hash vai pro D1).
- *   3. Lê o projeto via Keystatic reader e renderiza o markdoc → HTML (snapshot).
- *   4. Roda `wrangler d1 execute --file=...` para inserir a linha.
- *   5. Imprime o link.
+ * Flow:
+ *   1. Generates a random token (32 bytes, base64url) — only appears in the link.
+ *   2. Hashes the token (SHA-256) — token_hash is stored in D1.
+ *   3. Reads the project via Keystatic reader and renders markdoc → HTML (snapshot).
+ *   4. Runs `wrangler d1 execute --file=...` to insert the row.
+ *   5. Prints the link.
  */
 import { randomBytes, createHash } from 'node:crypto';
 import { writeFileSync, mkdirSync, rmSync } from 'node:fs';
@@ -39,7 +39,7 @@ function parseArgs(argv: string[]): Args {
     }
   }
   if (!out.project || !out.name || !out.email) {
-    console.error('Uso: --project=<slug> --name="Cliente" --email=cliente@x.com [--days=7] [--remote] [--base-url=https://...]');
+    console.error('Usage: --project=<slug> --name="Client" --email=client@x.com [--days=7] [--remote] [--base-url=https://...]');
     process.exit(1);
   }
   return out as Args;
@@ -56,28 +56,27 @@ async function main() {
   const isRemote = !!args.remote;
   const days = args.days ? parseInt(args.days, 10) : 7;
 
-  // 1) Carrega o projeto.
+  // 1) Load project.
   const reader = createReader(process.cwd(), keystaticConfig);
   const project = await reader.collections.projects.read(args.project);
   if (!project) {
-    console.error(`Projeto não encontrado: ${args.project}`);
-    console.error('Slugs disponíveis:');
+    console.error(`Project not found: ${args.project}`);
+    console.error('Available slugs:');
     const all = await reader.collections.projects.all();
     for (const p of all) console.error('  -', p.slug);
     process.exit(1);
   }
 
-  // 2) Renderiza markdoc → HTML (snapshot).
-  // O reader do Keystatic devolve { node } (não o node direto).
+  // 2) Render markdoc → HTML (snapshot).
   const content = (await project.content()) as { node: unknown };
   const transformed = Markdoc.transform(content.node as any);
   const html = Markdoc.renderers.html(transformed);
 
-  // 3) Gera token + hash.
+  // 3) Generate token + hash.
   const token = randomBytes(32).toString('base64url');
   const tokenHash = createHash('sha256').update(token).digest('hex');
 
-  // 4) Monta SQL e executa via wrangler.
+  // 4) Build SQL and run via wrangler.
   const now = Date.now();
   const expiresAt = days > 0 ? now + days * 24 * 60 * 60 * 1000 : null;
 
@@ -116,19 +115,19 @@ VALUES
   rmSync(sqlFile, { force: true });
 
   if (r.status !== 0) {
-    console.error('Falha ao executar wrangler d1.');
+    console.error('wrangler d1 execution failed.');
     process.exit(r.status ?? 1);
   }
 
-  const link = `${baseUrl.replace(/\/$/, '')}/aprovar/${token}`;
-  console.log('\n✓ Link de aprovação gerado:');
+  const link = `${baseUrl.replace(/\/$/, '')}/approve/${token}`;
+  console.log('\n✓ Approval link generated:');
   console.log(`\n  ${link}\n`);
-  console.log(`Projeto:  ${project.title}`);
-  console.log(`Cliente:  ${args.name} <${args.email}>`);
+  console.log(`Project: ${project.title}`);
+  console.log(`Client:  ${args.name} <${args.email}>`);
   if (expiresAt) {
-    console.log(`Expira:   ${new Date(expiresAt).toISOString()}`);
+    console.log(`Expires: ${new Date(expiresAt).toISOString()}`);
   }
-  console.log(`Ambiente: ${isRemote ? 'REMOTO (produção)' : 'LOCAL (dev)'}\n`);
+  console.log(`Env:     ${isRemote ? 'REMOTE (production)' : 'LOCAL (dev)'}\n`);
 }
 
 main().catch((err) => {

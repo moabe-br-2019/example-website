@@ -9,10 +9,10 @@ export const prerender = false;
 export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
   const env = locals.runtime?.env;
   if (!env) {
-    return json({ error: 'runtime indisponível' }, 500);
+    return json({ error: 'runtime unavailable' }, 500);
   }
 
-  // 1) Aceita JSON e form-data.
+  // 1) Accepts both JSON and form-data.
   const ct = request.headers.get('content-type') ?? '';
   let raw: Record<string, unknown>;
   try {
@@ -23,24 +23,24 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
       raw = Object.fromEntries(form.entries());
     }
   } catch {
-    return json({ error: 'payload inválido' }, 400);
+    return json({ error: 'invalid payload' }, 400);
   }
 
-  // 2) Validação.
+  // 2) Validation.
   const parsed = contactSchema.safeParse(raw);
   if (!parsed.success) {
     const fieldErrors = parsed.error.flatten().fieldErrors;
-    return json({ error: 'dados inválidos', fieldErrors }, 400);
+    return json({ error: 'invalid data', fieldErrors }, 400);
   }
   const data = parsed.data;
 
-  // 3) Honeypot — campo "website" deve estar vazio.
+  // 3) Honeypot — "website" field must be empty.
   if (data.website) {
-    // Responde 200 silenciosamente pra não dar feedback ao bot.
+    // Silent 200 so the bot doesn't learn we caught it.
     return json({ ok: true });
   }
 
-  // 4) Turnstile (se configurado).
+  // 4) Turnstile (if configured).
   const ip = request.headers.get('cf-connecting-ip') ?? clientAddress ?? null;
   const turnstile = await verifyTurnstile({
     secret: env.CF_TURNSTILE_SECRET,
@@ -48,10 +48,10 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
     remoteIp: ip,
   });
   if (!turnstile.ok) {
-    return json({ error: 'verificação anti-spam falhou' }, 400);
+    return json({ error: 'anti-spam verification failed' }, 400);
   }
 
-  // 5) Insere no D1.
+  // 5) Insert into D1.
   const db = getDB(locals);
   const now = Date.now();
   const ua = request.headers.get('user-agent')?.slice(0, 500) ?? null;
@@ -77,10 +77,10 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
       .run();
   } catch (err) {
     console.error('contact insert failed', err);
-    return json({ error: 'erro ao salvar' }, 500);
+    return json({ error: 'failed to save' }, 500);
   }
 
-  // 6) Email (best-effort — não falha o request se o email cair).
+  // 6) Email (best-effort — don't fail the request if email is down).
   if (env.RESEND_API_KEY && env.CONTACT_FROM_EMAIL && env.CONTACT_TO_EMAIL) {
     try {
       await sendEmail({
@@ -88,7 +88,7 @@ export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
         from: env.CONTACT_FROM_EMAIL,
         to: env.CONTACT_TO_EMAIL,
         replyTo: data.email,
-        subject: `Novo contato: ${data.subject ?? data.name}`,
+        subject: `New contact: ${data.subject ?? data.name}`,
         html: renderContactEmail(data),
       });
     } catch (err) {
@@ -114,11 +114,11 @@ function renderContactEmail(d: {
   message: string;
 }): string {
   return `
-    <h2>Novo contato pelo site</h2>
-    <p><strong>Nome:</strong> ${escapeHtml(d.name)}</p>
+    <h2>New contact from the website</h2>
+    <p><strong>Name:</strong> ${escapeHtml(d.name)}</p>
     <p><strong>Email:</strong> ${escapeHtml(d.email)}</p>
-    ${d.phone ? `<p><strong>Telefone:</strong> ${escapeHtml(d.phone)}</p>` : ''}
-    ${d.subject ? `<p><strong>Assunto:</strong> ${escapeHtml(d.subject)}</p>` : ''}
+    ${d.phone ? `<p><strong>Phone:</strong> ${escapeHtml(d.phone)}</p>` : ''}
+    ${d.subject ? `<p><strong>Subject:</strong> ${escapeHtml(d.subject)}</p>` : ''}
     <hr>
     <p style="white-space:pre-wrap">${escapeHtml(d.message)}</p>
   `;
