@@ -17,13 +17,6 @@
       }
     },
     {
-      "discriminant": "page",
-      "value": {
-        "page": "about",
-        "opensInNewTab": false
-      }
-    },
-    {
       "discriminant": "section",
       "value": {
         "section": "contact",
