@@ -20,7 +20,6 @@
       "discriminant": "page",
       "value": {
         "page": "about",
-        "labelOverride": "",
         "opensInNewTab": false
       }
     },
@@ -29,6 +28,13 @@
       "value": {
         "section": "contact",
         "label": "Contact",
+        "opensInNewTab": false
+      }
+    },
+    {
+      "discriminant": "page",
+      "value": {
+        "page": "test",
         "opensInNewTab": false
       }
     }
@@ -58,6 +64,5 @@
         "opensInNewTab": false
       }
     }
-  ],
-  "footerNote": ""
+  ]
 }
