@@ -1,7 +1,6 @@
 import { config, collection, singleton, fields } from '@keystatic/core';
 
-// TODO: ao criar o repo no GitHub, trocar owner/name abaixo.
-const GITHUB_REPO = { owner: 'TROCAR-OWNER', name: 'example-full-website' };
+const GITHUB_REPO = { owner: 'moabe-br-2019', name: 'example-website' };
 
 const isProd = process.env.NODE_ENV === 'production';
 
