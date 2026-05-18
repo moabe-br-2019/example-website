@@ -4,6 +4,89 @@ const GITHUB_REPO = { owner: 'moabe-br-2019', name: 'example-website' };
 
 const isProd = process.env.NODE_ENV === 'production';
 
+// ---------- Navigation items (shared by header + footer) ----------
+
+const SITE_SECTIONS = [
+  { label: 'Home', value: 'home' },
+  { label: 'Services', value: 'services' },
+  { label: 'Projects', value: 'projects' },
+  { label: 'Contact', value: 'contact' },
+] as const;
+
+function navItem() {
+  return fields.conditional(
+    fields.select({
+      label: 'Type',
+      defaultValue: 'page',
+      options: [
+        { label: 'Page (from Pages collection)', value: 'page' },
+        { label: 'Site section', value: 'section' },
+        { label: 'External / custom URL', value: 'url' },
+      ],
+    }),
+    {
+      page: fields.object({
+        page: fields.relationship({
+          label: 'Page',
+          collection: 'pages',
+        }),
+        labelOverride: fields.text({
+          label: 'Label override (optional)',
+          description: 'Leave empty to use the page title.',
+        }),
+        opensInNewTab: fields.checkbox({
+          label: 'Open in new tab',
+          defaultValue: false,
+        }),
+      }),
+      section: fields.object({
+        section: fields.select({
+          label: 'Section',
+          defaultValue: 'services',
+          options: SITE_SECTIONS as unknown as Array<{ label: string; value: string }>,
+        }),
+        label: fields.text({
+          label: 'Label',
+          validation: { isRequired: true },
+        }),
+        opensInNewTab: fields.checkbox({
+          label: 'Open in new tab',
+          defaultValue: false,
+        }),
+      }),
+      url: fields.object({
+        label: fields.text({
+          label: 'Label',
+          validation: { isRequired: true },
+        }),
+        href: fields.text({
+          label: 'URL',
+          description: 'Any URL — internal (/foo) or external (https://...).',
+          validation: { isRequired: true },
+        }),
+        opensInNewTab: fields.checkbox({
+          label: 'Open in new tab',
+          defaultValue: false,
+        }),
+      }),
+    },
+  );
+}
+
+function navItemLabel(p: any): string {
+  const kind = p.fields.discriminant;
+  const v = p.fields.value.fields;
+  if (kind === 'page') {
+    const pg = v.page?.value;
+    const override = v.labelOverride?.value;
+    return `Page → ${pg || '?'}${override ? ` (${override})` : ''}`;
+  }
+  if (kind === 'section') {
+    return `Section → ${v.label?.value || v.section?.value || '?'}`;
+  }
+  return `Link → ${v.label?.value || '?'} (${v.href?.value || '?'})`;
+}
+
 export default config({
   storage: isProd
     ? { kind: 'github', repo: GITHUB_REPO }
@@ -316,50 +399,14 @@ export default config({
       path: 'content/settings/navigation',
       format: { data: 'json' },
       schema: {
-        mainNavigation: fields.array(
-          fields.object({
-            label: fields.text({
-              label: 'Label',
-              validation: { isRequired: true },
-            }),
-            href: fields.text({
-              label: 'Link',
-              description:
-                'Internal URL (e.g. /about, /services) or external (https://...).',
-              validation: { isRequired: true },
-            }),
-            opensInNewTab: fields.checkbox({
-              label: 'Open in new tab',
-              defaultValue: false,
-            }),
-          }),
-          {
-            label: 'Header menu items',
-            itemLabel: (p) =>
-              `${p.fields.label.value || '(no label)'}  →  ${p.fields.href.value || '(no link)'}`,
-          },
-        ),
-        footerLinks: fields.array(
-          fields.object({
-            label: fields.text({
-              label: 'Label',
-              validation: { isRequired: true },
-            }),
-            href: fields.text({
-              label: 'Link',
-              validation: { isRequired: true },
-            }),
-            opensInNewTab: fields.checkbox({
-              label: 'Open in new tab',
-              defaultValue: false,
-            }),
-          }),
-          {
-            label: 'Footer links',
-            itemLabel: (p) =>
-              `${p.fields.label.value || '(no label)'}  →  ${p.fields.href.value || '(no link)'}`,
-          },
-        ),
+        mainNavigation: fields.array(navItem(), {
+          label: 'Header menu items',
+          itemLabel: navItemLabel,
+        }),
+        footerLinks: fields.array(navItem(), {
+          label: 'Footer links',
+          itemLabel: navItemLabel,
+        }),
         footerNote: fields.text({
           label: 'Footer note',
           description: 'Optional small text below the links (e.g. tagline, address).',

@@ -1,14 +1,63 @@
 {
   "mainNavigation": [
-    { "label": "Services", "href": "/services", "opensInNewTab": false },
-    { "label": "Projects", "href": "/projects", "opensInNewTab": false },
-    { "label": "About", "href": "/about", "opensInNewTab": false },
-    { "label": "Contact", "href": "/contact", "opensInNewTab": false }
+    {
+      "discriminant": "section",
+      "value": {
+        "section": "services",
+        "label": "Services",
+        "opensInNewTab": false
+      }
+    },
+    {
+      "discriminant": "section",
+      "value": {
+        "section": "projects",
+        "label": "Projects",
+        "opensInNewTab": false
+      }
+    },
+    {
+      "discriminant": "page",
+      "value": {
+        "page": "about",
+        "labelOverride": "",
+        "opensInNewTab": false
+      }
+    },
+    {
+      "discriminant": "section",
+      "value": {
+        "section": "contact",
+        "label": "Contact",
+        "opensInNewTab": false
+      }
+    }
   ],
   "footerLinks": [
-    { "label": "Services", "href": "/services", "opensInNewTab": false },
-    { "label": "Projects", "href": "/projects", "opensInNewTab": false },
-    { "label": "Contact", "href": "/contact", "opensInNewTab": false }
+    {
+      "discriminant": "section",
+      "value": {
+        "section": "services",
+        "label": "Services",
+        "opensInNewTab": false
+      }
+    },
+    {
+      "discriminant": "section",
+      "value": {
+        "section": "projects",
+        "label": "Projects",
+        "opensInNewTab": false
+      }
+    },
+    {
+      "discriminant": "section",
+      "value": {
+        "section": "contact",
+        "label": "Contact",
+        "opensInNewTab": false
+      }
+    }
   ],
   "footerNote": ""
 }
