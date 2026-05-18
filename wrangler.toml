@@ -1,12 +1,14 @@
 name = "example-full-website"
+main = "./dist/_worker.js/index.js"
 compatibility_date = "2026-05-01"
 compatibility_flags = ["nodejs_compat"]
 
-# O adapter @astrojs/cloudflare gera dist/_worker.js/ e o Wrangler
-# auto-detecta esse Worker quando aponta os assets para ./dist.
+# Static Assets — o adapter @astrojs/cloudflare gera dist/_worker.js/ + dist/_astro/
+# e os HTMLs prerenderizados em dist/<rota>/index.html.
 [assets]
 directory = "./dist"
 binding = "ASSETS"
+not_found_handling = "none"
 
 # Banco D1 — criar com:  npm run db:create
 # Depois copiar o database_id retornado para cá.
