@@ -34,7 +34,14 @@ export default config({
           slug: {
             label: 'URL',
             description:
-              'URL segment. Reserved (do not use): services, projects, contact, approve, api, keystatic.',
+              'Auto-generated from the title. Edit only if you know what you\'re doing — must be lowercase letters, numbers and hyphens (e.g. "about-us"). Reserved: services, projects, contact, approve, api, keystatic.',
+            validation: {
+              pattern: {
+                regex: /^[a-z0-9]+(-[a-z0-9]+)*$/,
+                message:
+                  'URL must be lowercase letters, numbers and single hyphens only (e.g. "about-us"). Use the regenerate button next to the field to restore the auto value.',
+              },
+            },
           },
         }),
         seo: fields.object(
