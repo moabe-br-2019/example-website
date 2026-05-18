@@ -2,6 +2,8 @@
 export const prerender = true;
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
 import { reader } from '../../lib/keystatic';
 
 const projectsRaw = await reader.collections.projects.all();
@@ -18,9 +20,9 @@ const fmtDate = (d: string | null) =>
 ---
 
 <BaseLayout title="Projects">
+  <SiteHeader />
   <main class="mx-auto max-w-6xl px-6 py-16">
-    <a href="/" class="text-sm text-neutral-400 hover:text-white">← Home</a>
-    <h1 class="mt-4 text-4xl font-bold">Projects</h1>
+    <h1 class="text-4xl font-bold">Projects</h1>
     <p class="mt-2 text-neutral-400">A selection of the work we've shipped.</p>
 
     <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -64,4 +66,5 @@ const fmtDate = (d: string | null) =>
       <p class="mt-10 text-center text-neutral-500">No projects published yet.</p>
     )}
   </main>
+  <SiteFooter />
 </BaseLayout>

@@ -1,0 +1,31 @@
+---
+import { reader } from '../lib/keystatic';
+
+const [settings, nav] = await Promise.all([
+  reader.singletons.siteSettings.read(),
+  reader.singletons.navigation.read(),
+]);
+
+const siteName = settings?.siteName ?? 'Portfolio';
+const items = nav?.mainNavigation ?? [];
+---
+
+<header class="border-b border-neutral-800">
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+    <a href="/" class="text-lg font-semibold">{siteName}</a>
+    {items.length > 0 && (
+      <nav class="flex gap-6 text-sm text-neutral-300">
+        {items.map((item) => (
+          <a
+            href={item.href}
+            class="hover:text-white"
+            target={item.opensInNewTab ? '_blank' : undefined}
+            rel={item.opensInNewTab ? 'noopener noreferrer' : undefined}
+          >
+            {item.label}
+          </a>
+        ))}
+      </nav>
+    )}
+  </div>
+</header>

@@ -1,0 +1,14 @@
+{
+  "mainNavigation": [
+    { "label": "Services", "href": "/services", "opensInNewTab": false },
+    { "label": "Projects", "href": "/projects", "opensInNewTab": false },
+    { "label": "About", "href": "/about", "opensInNewTab": false },
+    { "label": "Contact", "href": "/contact", "opensInNewTab": false }
+  ],
+  "footerLinks": [
+    { "label": "Services", "href": "/services", "opensInNewTab": false },
+    { "label": "Projects", "href": "/projects", "opensInNewTab": false },
+    { "label": "Contact", "href": "/contact", "opensInNewTab": false }
+  ],
+  "footerNote": ""
+}

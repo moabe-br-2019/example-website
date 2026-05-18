@@ -2,6 +2,8 @@
 export const prerender = true;
 
 import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import { reader } from '../lib/keystatic';
 
 const [settings, servicesRaw, projectsRaw] = await Promise.all([
@@ -28,16 +30,7 @@ const tagline = settings?.tagline ?? '';
 ---
 
 <BaseLayout title={siteName} description={tagline}>
-  <header class="border-b border-neutral-800">
-    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-      <a href="/" class="text-lg font-semibold">{siteName}</a>
-      <nav class="flex gap-6 text-sm text-neutral-300">
-        <a href="/services" class="hover:text-white">Services</a>
-        <a href="/projects" class="hover:text-white">Projects</a>
-        <a href="/contact" class="hover:text-white">Contact</a>
-      </nav>
-    </div>
-  </header>
+  <SiteHeader />
 
   <main>
     <section class="mx-auto max-w-6xl px-6 py-24 text-center">
@@ -109,9 +102,5 @@ const tagline = settings?.tagline ?? '';
     )}
   </main>
 
-  <footer class="border-t border-neutral-800">
-    <div class="mx-auto max-w-6xl px-6 py-10 text-sm text-neutral-500">
-      © {new Date().getFullYear()} {siteName}
-    </div>
-  </footer>
+  <SiteFooter />
 </BaseLayout>

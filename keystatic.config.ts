@@ -13,7 +13,7 @@ export default config({
     brand: { name: 'Portfolio' },
     navigation: {
       Content: ['pages', 'services', 'projects', 'testimonials'],
-      Settings: ['siteSettings'],
+      Settings: ['siteSettings', 'navigation'],
     },
   },
 
@@ -304,6 +304,63 @@ export default config({
   },
 
   singletons: {
+    navigation: singleton({
+      label: 'Navigation (menu)',
+      path: 'content/settings/navigation',
+      format: { data: 'json' },
+      schema: {
+        mainNavigation: fields.array(
+          fields.object({
+            label: fields.text({
+              label: 'Label',
+              validation: { isRequired: true },
+            }),
+            href: fields.text({
+              label: 'Link',
+              description:
+                'Internal URL (e.g. /about, /services) or external (https://...).',
+              validation: { isRequired: true },
+            }),
+            opensInNewTab: fields.checkbox({
+              label: 'Open in new tab',
+              defaultValue: false,
+            }),
+          }),
+          {
+            label: 'Header menu items',
+            itemLabel: (p) =>
+              `${p.fields.label.value || '(no label)'}  →  ${p.fields.href.value || '(no link)'}`,
+          },
+        ),
+        footerLinks: fields.array(
+          fields.object({
+            label: fields.text({
+              label: 'Label',
+              validation: { isRequired: true },
+            }),
+            href: fields.text({
+              label: 'Link',
+              validation: { isRequired: true },
+            }),
+            opensInNewTab: fields.checkbox({
+              label: 'Open in new tab',
+              defaultValue: false,
+            }),
+          }),
+          {
+            label: 'Footer links',
+            itemLabel: (p) =>
+              `${p.fields.label.value || '(no label)'}  →  ${p.fields.href.value || '(no link)'}`,
+          },
+        ),
+        footerNote: fields.text({
+          label: 'Footer note',
+          description: 'Optional small text below the links (e.g. tagline, address).',
+          multiline: true,
+        }),
+      },
+    }),
+
     siteSettings: singleton({
       label: 'Site settings',
       path: 'content/settings/site',

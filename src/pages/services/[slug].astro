@@ -2,6 +2,8 @@
 export const prerender = true;
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
 import { reader } from '../../lib/keystatic';
 import Markdoc from '@markdoc/markdoc';
 
@@ -23,10 +25,12 @@ const html = Markdoc.renderers.html(transformed);
 ---
 
 <BaseLayout title={service.title}>
+  <SiteHeader />
   <main class="mx-auto max-w-3xl px-6 py-16">
     <a href="/services" class="text-sm text-neutral-400 hover:text-white">← Services</a>
     <article class="prose prose-invert mt-6 max-w-none">
       <Fragment set:html={html} />
     </article>
   </main>
+  <SiteFooter />
 </BaseLayout>

@@ -2,6 +2,8 @@
 export const prerender = true;
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
 import { reader } from '../../lib/keystatic';
 import Markdoc from '@markdoc/markdoc';
 
@@ -26,6 +28,7 @@ const fmtDate = (d: string | null) =>
 ---
 
 <BaseLayout title={project.title} description={project.summary}>
+  <SiteHeader />
   <main class="mx-auto max-w-3xl px-6 py-16">
     <a href="/projects" class="text-sm text-neutral-400 hover:text-white">← Projects</a>
 
@@ -66,4 +69,5 @@ const fmtDate = (d: string | null) =>
       <Fragment set:html={html} />
     </article>
   </main>
+  <SiteFooter />
 </BaseLayout>

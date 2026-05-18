@@ -2,6 +2,8 @@
 export const prerender = true;
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
 import ContactForm from '../../components/ContactForm.astro';
 import { reader } from '../../lib/keystatic';
 
@@ -12,9 +14,9 @@ const whatsapp = settings?.whatsapp ?? '';
 ---
 
 <BaseLayout title="Contact">
+  <SiteHeader />
   <main class="mx-auto max-w-3xl px-6 py-16">
-    <a href="/" class="text-sm text-neutral-400 hover:text-white">← Home</a>
-    <h1 class="mt-4 text-4xl font-bold">Let's talk</h1>
+    <h1 class="text-4xl font-bold">Let's talk</h1>
     <p class="mt-2 text-neutral-400">
       Tell us about your project. We reply within 1 business day.
     </p>
@@ -41,4 +43,5 @@ const whatsapp = settings?.whatsapp ?? '';
       </aside>
     )}
   </main>
+  <SiteFooter />
 </BaseLayout>
