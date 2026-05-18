@@ -30,13 +30,6 @@
         "label": "Contact",
         "opensInNewTab": false
       }
-    },
-    {
-      "discriminant": "page",
-      "value": {
-        "page": "test",
-        "opensInNewTab": false
-      }
     }
   ],
   "footerLinks": [
