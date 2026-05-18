@@ -100,7 +100,11 @@ export default config({
   ui: {
     brand: { name: 'Portfolio' },
     navigation: {
-      Content: ['pages', 'services', 'projects', 'testimonials'],
+      // TEMPORARY (demo): 'pages' removed to hide the page builder from the
+      // sidebar. Collection itself still exists — content/pages/ files stay,
+      // catch-all [...slug].astro still serves them. To re-enable, put 'pages'
+      // back at the start of the Content array.
+      Content: ['services', 'projects', 'testimonials'],
       Settings: ['siteSettings', 'navigation'],
     },
   },
