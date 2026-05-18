@@ -1,0 +1,44 @@
+---
+export const prerender = true;
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { reader } from '../lib/keystatic';
+
+const settings = await reader.singletons.siteSettings.read();
+const email = settings?.contactEmail ?? '';
+const phone = settings?.phone ?? '';
+const whatsapp = settings?.whatsapp ?? '';
+---
+
+<BaseLayout title="Contato">
+  <main class="mx-auto max-w-3xl px-6 py-16">
+    <a href="/" class="text-sm text-neutral-400 hover:text-white">← Início</a>
+    <h1 class="mt-4 text-4xl font-bold">Vamos conversar</h1>
+    <p class="mt-2 text-neutral-400">
+      Conte sobre o seu projeto. Respondemos em até 1 dia útil.
+    </p>
+
+    <div class="mt-10">
+      <ContactForm />
+    </div>
+
+    {(email || phone || whatsapp) && (
+      <aside class="mt-12 rounded-lg border border-neutral-800 bg-neutral-900/40 p-6 text-sm text-neutral-300">
+        <h2 class="text-xs uppercase tracking-wider text-neutral-500">Ou diretamente</h2>
+        <ul class="mt-3 space-y-1">
+          {email && <li>Email: <a href={`mailto:${email}`} class="hover:text-white">{email}</a></li>}
+          {phone && <li>Telefone: {phone}</li>}
+          {whatsapp && (
+            <li>
+              WhatsApp:
+              <a href={`https://wa.me/${whatsapp}`} target="_blank" rel="noopener" class="ml-1 hover:text-white">
+                {whatsapp}
+              </a>
+            </li>
+          )}
+        </ul>
+      </aside>
+    )}
+  </main>
+</BaseLayout>

@@ -1,0 +1,42 @@
+{
+  "name": "example-full-website",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "deploy": "astro build && wrangler deploy",
+    "db:create": "wrangler d1 create example-full-website-db",
+    "db:migrate:local": "wrangler d1 migrations apply example-full-website-db --local",
+    "db:migrate": "wrangler d1 migrations apply example-full-website-db --remote",
+    "db:exec:local": "wrangler d1 execute example-full-website-db --local --command",
+    "db:exec": "wrangler d1 execute example-full-website-db --remote --command",
+    "approval:create": "tsx scripts/create-approval.ts",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv ./worker-configuration.d.ts"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^12.6.13",
+    "@astrojs/markdoc": "^0.15.11",
+    "@astrojs/react": "^4.4.2",
+    "@keystatic/astro": "^5.0.6",
+    "@keystatic/core": "^0.5.50",
+    "@markdoc/markdoc": "^0.4.0",
+    "@tailwindcss/typography": "^0.5.19",
+    "@tailwindcss/vite": "^4.3.0",
+    "astro": "^5.18.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwindcss": "^4.3.0",
+    "wrangler": "^4.92.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.5",
+    "tsx": "^4.22.1"
+  }
+}

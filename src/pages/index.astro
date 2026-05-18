@@ -1,0 +1,77 @@
+---
+export const prerender = true;
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { reader } from '../lib/keystatic';
+
+const [settings, servicesRaw] = await Promise.all([
+  reader.singletons.siteSettings.read(),
+  reader.collections.services.all(),
+]);
+
+const services = servicesRaw
+  .map((s) => ({ slug: s.slug, ...s.entry }))
+  .sort((a, b) => a.order - b.order);
+
+const siteName = settings?.siteName ?? 'Portfólio';
+const tagline = settings?.tagline ?? '';
+---
+
+<BaseLayout title={siteName} description={tagline}>
+  <header class="border-b border-neutral-800">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+      <a href="/" class="text-lg font-semibold">{siteName}</a>
+      <nav class="flex gap-6 text-sm text-neutral-300">
+        <a href="/servicos" class="hover:text-white">Serviços</a>
+        <a href="/projetos" class="hover:text-white">Projetos</a>
+        <a href="/contato" class="hover:text-white">Contato</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="mx-auto max-w-6xl px-6 py-24 text-center">
+      <h1 class="bg-gradient-to-br from-white to-neutral-500 bg-clip-text text-5xl font-bold leading-tight text-transparent sm:text-7xl">
+        {tagline || siteName}
+      </h1>
+      <p class="mx-auto mt-6 max-w-2xl text-lg text-neutral-400">
+        Estratégia, design e desenvolvimento para marcas que querem crescer no digital.
+      </p>
+      <div class="mt-10 flex justify-center gap-3">
+        <a href="/contato" class="rounded-md bg-white px-5 py-2.5 text-sm font-medium text-neutral-900 hover:bg-neutral-200">
+          Iniciar projeto
+        </a>
+        <a href="/projetos" class="rounded-md border border-neutral-700 px-5 py-2.5 text-sm font-medium text-neutral-200 hover:border-neutral-500">
+          Ver portfólio
+        </a>
+      </div>
+    </section>
+
+    <section class="border-t border-neutral-800 bg-neutral-900/40">
+      <div class="mx-auto max-w-6xl px-6 py-20">
+        <h2 class="text-3xl font-semibold">Serviços</h2>
+        <p class="mt-2 text-neutral-400">O que entregamos.</p>
+        <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {services.map((s) => (
+            <article class="rounded-lg border border-neutral-800 bg-neutral-950 p-6 transition hover:border-neutral-600">
+              <div class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-md bg-neutral-800 text-xs uppercase text-neutral-300">
+                {s.icon?.slice(0, 2)}
+              </div>
+              <h3 class="text-lg font-semibold">{s.title}</h3>
+              <p class="mt-2 text-sm text-neutral-400">{s.description}</p>
+              <a href={`/servicos/${s.slug}`} class="mt-4 inline-block text-sm text-neutral-300 hover:text-white">
+                Saber mais →
+              </a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-neutral-800">
+    <div class="mx-auto max-w-6xl px-6 py-10 text-sm text-neutral-500">
+      © {new Date().getFullYear()} {siteName}
+    </div>
+  </footer>
+</BaseLayout>

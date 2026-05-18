@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(npm *)",
+      "PowerShell(Get-ChildItem *)",
+      "PowerShell(New-Item *)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\Moabe\\\\Documents\\\\DEV\\\\example_full_website\" -Force -Name | Where-Object { $_ -notin @\\('node_modules','.claude','.vscode','dist'\\) })",
+      "PowerShell(npx tsx scripts/debug-content.ts 2>&1 | Select-Object -Last 30)",
+      "PowerShell(npx tsx scripts/debug-content.ts 2>&1 | Select-Object -Last 15)"
+    ]
+  }
+}

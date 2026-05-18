@@ -1,0 +1,30 @@
+name = "example-full-website"
+compatibility_date = "2026-05-01"
+compatibility_flags = ["nodejs_compat"]
+
+# O adapter @astrojs/cloudflare gera dist/_worker.js/ e o Wrangler
+# auto-detecta esse Worker quando aponta os assets para ./dist.
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+
+# Banco D1 — criar com:  npm run db:create
+# Depois copiar o database_id retornado para cá.
+[[d1_databases]]
+binding = "DB"
+database_name = "example-full-website-db"
+database_id = "TROCAR-COM-ID-RETORNADO-PELO-WRANGLER"
+migrations_dir = "./migrations"
+
+# KV usado pelo Astro Sessions (Cloudflare adapter). Criar com:
+#   npx wrangler kv namespace create SESSION
+# [[kv_namespaces]]
+# binding = "SESSION"
+# id = "<preencher-com-id-retornado>"
+
+# Secrets (definir via: npx wrangler secret put NOME)
+#   KEYSTATIC_SECRET            — string aleatória, 32+ chars
+#   KEYSTATIC_GITHUB_CLIENT_ID  — do GitHub OAuth App
+#   KEYSTATIC_GITHUB_CLIENT_SECRET
+#   RESEND_API_KEY              — para email (Fase 4)
+#   APPROVAL_NOTIFY_EMAIL       — email do dono para receber notificações (Fase 5)

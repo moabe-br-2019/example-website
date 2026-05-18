@@ -1,0 +1,32 @@
+---
+export const prerender = true;
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { reader } from '../../lib/keystatic';
+import Markdoc from '@markdoc/markdoc';
+
+export async function getStaticPaths() {
+  const services = await reader.collections.services.all();
+  return services.map((s) => ({ params: { slug: s.slug } }));
+}
+
+const { slug } = Astro.params;
+const service = await reader.collections.services.read(slug!);
+
+if (!service) {
+  return Astro.redirect('/servicos');
+}
+
+const content = (await service.content()) as { node: unknown };
+const transformed = Markdoc.transform(content.node as any);
+const html = Markdoc.renderers.html(transformed);
+---
+
+<BaseLayout title={service.title}>
+  <main class="mx-auto max-w-3xl px-6 py-16">
+    <a href="/servicos" class="text-sm text-neutral-400 hover:text-white">← Serviços</a>
+    <article class="prose prose-invert mt-6 max-w-none">
+      <Fragment set:html={html} />
+    </article>
+  </main>
+</BaseLayout>
