@@ -430,6 +430,13 @@ export default config({
           label: 'Tagline',
           multiline: true,
         }),
+        favicon: fields.image({
+          label: 'Favicon',
+          description:
+            'Browser tab icon. SVG recommended (scales perfectly); PNG (32×32 or larger) also works. Leave empty to use the default.',
+          directory: 'public/images/favicons',
+          publicPath: '/images/favicons/',
+        }),
         contactEmail: fields.text({
           label: 'Contact email',
           validation: { isRequired: true },

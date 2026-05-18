@@ -29,7 +29,7 @@ const siteName = settings?.siteName ?? 'Portfolio';
 const tagline = settings?.tagline ?? '';
 ---
 
-<BaseLayout title={siteName} description={tagline}>
+<BaseLayout title={siteName} description={tagline} faviconUrl={settings?.favicon ?? null}>
   <SiteHeader />
 
   <main>

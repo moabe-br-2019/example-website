@@ -5,14 +5,18 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import { reader } from '../../lib/keystatic';
+import { getFaviconUrl } from '../../lib/site';
 
-const servicesRaw = await reader.collections.services.all();
+const [servicesRaw, faviconUrl] = await Promise.all([
+  reader.collections.services.all(),
+  getFaviconUrl(),
+]);
 const services = servicesRaw
   .map((s) => ({ slug: s.slug, ...s.entry }))
   .sort((a, b) => a.order - b.order);
 ---
 
-<BaseLayout title="Services">
+<BaseLayout title="Services" faviconUrl={faviconUrl}>
   <SiteHeader />
   <main class="mx-auto max-w-6xl px-6 py-16">
     <h1 class="text-4xl font-bold">Services</h1>

@@ -13,7 +13,7 @@ const phone = settings?.phone ?? '';
 const whatsapp = settings?.whatsapp ?? '';
 ---
 
-<BaseLayout title="Contact">
+<BaseLayout title="Contact" faviconUrl={settings?.favicon ?? null}>
   <SiteHeader />
   <main class="mx-auto max-w-3xl px-6 py-16">
     <h1 class="text-4xl font-bold">Let's talk</h1>

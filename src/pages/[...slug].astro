@@ -6,6 +6,7 @@ import BlockRenderer from '../components/blocks/BlockRenderer.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { reader } from '../lib/keystatic';
+import { getFaviconUrl } from '../lib/site';
 
 export async function getStaticPaths() {
   // Slugs reserved by static routes — pages with these slugs are silently skipped.
@@ -28,9 +29,10 @@ const { entry } = Astro.props as { entry: any };
 
 const blocks = (entry.blocks ?? []) as Array<{ discriminant: string; value: any }>;
 const seo = entry.seo ?? {};
+const faviconUrl = await getFaviconUrl();
 ---
 
-<BaseLayout title={entry.title} description={seo.description ?? undefined}>
+<BaseLayout title={entry.title} description={seo.description ?? undefined} faviconUrl={faviconUrl}>
   {seo.noindex && <meta name="robots" content="noindex" slot="head" />}
 
   <SiteHeader />

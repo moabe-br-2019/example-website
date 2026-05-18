@@ -5,6 +5,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import { reader } from '../../lib/keystatic';
+import { getFaviconUrl } from '../../lib/site';
 import Markdoc from '@markdoc/markdoc';
 
 export async function getStaticPaths() {
@@ -22,9 +23,10 @@ if (!service) {
 const content = (await service.content()) as { node: unknown };
 const transformed = Markdoc.transform(content.node as any);
 const html = Markdoc.renderers.html(transformed);
+const faviconUrl = await getFaviconUrl();
 ---
 
-<BaseLayout title={service.title}>
+<BaseLayout title={service.title} faviconUrl={faviconUrl}>
   <SiteHeader />
   <main class="mx-auto max-w-3xl px-6 py-16">
     <a href="/services" class="text-sm text-neutral-400 hover:text-white">← Services</a>

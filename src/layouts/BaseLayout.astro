@@ -4,18 +4,29 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  faviconUrl?: string | null;
 }
 
 const {
   title = 'Portfolio',
   description = 'Portfolio of services and projects',
+  faviconUrl,
 } = Astro.props;
+
+const favicon = faviconUrl || '/favicon.svg';
+const faviconType =
+  favicon.endsWith('.svg') ? 'image/svg+xml'
+  : favicon.endsWith('.png') ? 'image/png'
+  : favicon.endsWith('.ico') ? 'image/x-icon'
+  : undefined;
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {faviconType
+      ? <link rel="icon" type={faviconType} href={favicon} />
+      : <link rel="icon" href={favicon} />}
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />

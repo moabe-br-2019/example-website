@@ -2,9 +2,12 @@
 export const prerender = true;
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getFaviconUrl } from '../../lib/site';
+
+const faviconUrl = await getFaviconUrl();
 ---
 
-<BaseLayout title="Message sent">
+<BaseLayout title="Message sent" faviconUrl={faviconUrl}>
   <main class="mx-auto flex min-h-[70vh] max-w-xl flex-col items-center justify-center px-6 text-center">
     <div class="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-full border border-green-500/30 bg-green-500/10 text-green-300">
       ✓
