@@ -74,8 +74,10 @@ function navItem() {
 }
 
 function navItemLabel(p: any): string {
-  const kind = p.fields.discriminant;
-  const v = p.fields.value.fields;
+  // p is ConditionalFieldPreviewProps: { discriminant, value, schema }
+  // p.value is the ObjectFieldPreviewProps for the active variant: { fields, ... }
+  const kind = p?.discriminant;
+  const v = p?.value?.fields ?? {};
   if (kind === 'page') {
     const pg = v.page?.value;
     const override = v.labelOverride?.value;
@@ -84,7 +86,10 @@ function navItemLabel(p: any): string {
   if (kind === 'section') {
     return `Section → ${v.label?.value || v.section?.value || '?'}`;
   }
-  return `Link → ${v.label?.value || '?'} (${v.href?.value || '?'})`;
+  if (kind === 'url') {
+    return `Link → ${v.label?.value || '?'} (${v.href?.value || '?'})`;
+  }
+  return 'Item';
 }
 
 export default config({
