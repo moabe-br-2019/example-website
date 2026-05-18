@@ -108,17 +108,13 @@ export default config({
   collections: {
     pages: collection({
       label: 'Pages',
-      slugField: 'slug',
+      slugField: 'title',
       path: 'content/pages/*',
       format: { data: 'json' },
-      columns: ['title', 'slug'],
+      columns: ['title'],
       schema: {
-        title: fields.text({
-          label: 'Title',
-          validation: { isRequired: true },
-        }),
-        slug: fields.slug({
-          name: { label: 'Title (also used as fallback slug)' },
+        title: fields.slug({
+          name: { label: 'Title' },
           slug: {
             label: 'URL',
             description:
