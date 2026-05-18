@@ -1,0 +1,21 @@
+{
+  "title": "Test",
+  "slug": "",
+  "seo": {
+    "noindex": false
+  },
+  "blocks": [
+    {
+      "discriminant": "hero",
+      "value": {
+        "heading": "test 1",
+        "subheading": "test",
+        "ctaPrimary": {
+          "label": "test",
+          "href": "#"
+        },
+        "ctaSecondary": {}
+      }
+    }
+  ]
+}
