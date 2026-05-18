@@ -8,9 +8,10 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "postbuild": "node scripts/post-build.mjs",
     "preview": "astro preview",
     "astro": "astro",
-    "deploy": "astro build && node scripts/post-build.mjs && wrangler deploy",
+    "deploy": "npm run build && wrangler deploy",
     "db:create": "wrangler d1 create example-full-website-db",
     "db:migrate:local": "wrangler d1 migrations apply example-full-website-db --local",
     "db:migrate": "wrangler d1 migrations apply example-full-website-db --remote",
