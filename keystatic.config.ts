@@ -12,12 +12,206 @@ export default config({
   ui: {
     brand: { name: 'Portfolio' },
     navigation: {
-      Content: ['services', 'projects', 'testimonials'],
+      Content: ['pages', 'services', 'projects', 'testimonials'],
       Settings: ['siteSettings'],
     },
   },
 
   collections: {
+    pages: collection({
+      label: 'Pages',
+      slugField: 'slug',
+      path: 'content/pages/*',
+      format: { data: 'json' },
+      columns: ['title', 'slug'],
+      schema: {
+        title: fields.text({
+          label: 'Title',
+          validation: { isRequired: true },
+        }),
+        slug: fields.slug({
+          name: { label: 'Title (also used as fallback slug)' },
+          slug: {
+            label: 'URL',
+            description:
+              'URL segment. Reserved (do not use): services, projects, contact, approve, api, keystatic.',
+          },
+        }),
+        seo: fields.object(
+          {
+            description: fields.text({
+              label: 'Meta description',
+              multiline: true,
+              validation: { length: { max: 200 } },
+            }),
+            ogImage: fields.image({
+              label: 'Social share image (OG)',
+              directory: 'public/images/og',
+              publicPath: '/images/og/',
+            }),
+            noindex: fields.checkbox({
+              label: 'Hide from search engines (noindex)',
+              defaultValue: false,
+            }),
+          },
+          { label: 'SEO' },
+        ),
+        blocks: fields.blocks(
+          {
+            hero: {
+              label: 'Hero',
+              itemLabel: (p) => `Hero — ${p.fields.heading.value || '(empty)'}`,
+              schema: fields.object({
+                heading: fields.text({ label: 'Heading', validation: { isRequired: true } }),
+                subheading: fields.text({ label: 'Subheading', multiline: true }),
+                ctaPrimary: fields.object(
+                  {
+                    label: fields.text({ label: 'Label' }),
+                    href: fields.text({ label: 'Link' }),
+                  },
+                  { label: 'Primary CTA' },
+                ),
+                ctaSecondary: fields.object(
+                  {
+                    label: fields.text({ label: 'Label' }),
+                    href: fields.text({ label: 'Link' }),
+                  },
+                  { label: 'Secondary CTA' },
+                ),
+                backgroundImage: fields.image({
+                  label: 'Background image (optional)',
+                  directory: 'public/images/pages',
+                  publicPath: '/images/pages/',
+                }),
+              }),
+            },
+            features: {
+              label: 'Features',
+              itemLabel: (p) =>
+                `Features — ${p.fields.heading.value || `${p.fields.items.elements.length} items`}`,
+              schema: fields.object({
+                heading: fields.text({ label: 'Heading' }),
+                intro: fields.text({ label: 'Intro', multiline: true }),
+                columns: fields.select({
+                  label: 'Columns',
+                  defaultValue: '3',
+                  options: [
+                    { label: '2', value: '2' },
+                    { label: '3', value: '3' },
+                    { label: '4', value: '4' },
+                  ],
+                }),
+                items: fields.array(
+                  fields.object({
+                    icon: fields.text({ label: 'Icon (lucide name)' }),
+                    title: fields.text({ label: 'Title' }),
+                    description: fields.text({ label: 'Description', multiline: true }),
+                  }),
+                  {
+                    label: 'Items',
+                    itemLabel: (p) => p.fields.title.value || '(no title)',
+                  },
+                ),
+              }),
+            },
+            cta: {
+              label: 'Call to action',
+              itemLabel: (p) => `CTA — ${p.fields.heading.value || '(empty)'}`,
+              schema: fields.object({
+                heading: fields.text({ label: 'Heading', validation: { isRequired: true } }),
+                description: fields.text({ label: 'Description', multiline: true }),
+                buttonLabel: fields.text({ label: 'Button label' }),
+                buttonHref: fields.text({ label: 'Button link' }),
+                style: fields.select({
+                  label: 'Style',
+                  defaultValue: 'dark',
+                  options: [
+                    { label: 'Dark', value: 'dark' },
+                    { label: 'Light', value: 'light' },
+                    { label: 'Accent', value: 'accent' },
+                  ],
+                }),
+              }),
+            },
+            richText: {
+              label: 'Rich text',
+              itemLabel: () => 'Rich text',
+              schema: fields.object({
+                content: fields.markdoc({ label: 'Content' }),
+              }),
+            },
+            image: {
+              label: 'Image',
+              itemLabel: (p) => `Image — ${p.fields.alt.value || '(no alt)'}`,
+              schema: fields.object({
+                src: fields.image({
+                  label: 'Image',
+                  directory: 'public/images/pages',
+                  publicPath: '/images/pages/',
+                  validation: { isRequired: true },
+                }),
+                alt: fields.text({
+                  label: 'Alt text (accessibility)',
+                  validation: { isRequired: true },
+                }),
+                caption: fields.text({ label: 'Caption (optional)' }),
+                width: fields.select({
+                  label: 'Width',
+                  defaultValue: 'wide',
+                  options: [
+                    { label: 'Narrow', value: 'narrow' },
+                    { label: 'Wide', value: 'wide' },
+                    { label: 'Full', value: 'full' },
+                  ],
+                }),
+              }),
+            },
+            faq: {
+              label: 'FAQ',
+              itemLabel: (p) =>
+                `FAQ — ${p.fields.heading.value || `${p.fields.items.elements.length} questions`}`,
+              schema: fields.object({
+                heading: fields.text({ label: 'Heading' }),
+                items: fields.array(
+                  fields.object({
+                    question: fields.text({ label: 'Question', validation: { isRequired: true } }),
+                    answer: fields.text({
+                      label: 'Answer',
+                      multiline: true,
+                      validation: { isRequired: true },
+                    }),
+                  }),
+                  {
+                    label: 'Q&A',
+                    itemLabel: (p) => p.fields.question.value || '(no question)',
+                  },
+                ),
+              }),
+            },
+            testimonialPull: {
+              label: 'Testimonials',
+              itemLabel: (p) =>
+                `Testimonials — ${p.fields.testimonials.elements.length} item(s)`,
+              schema: fields.object({
+                heading: fields.text({ label: 'Heading' }),
+                testimonials: fields.array(
+                  fields.relationship({
+                    label: 'Testimonial',
+                    collection: 'testimonials',
+                  }),
+                  {
+                    label: 'Pick testimonials',
+                    itemLabel: (p) => p.value ?? '(none)',
+                  },
+                ),
+              }),
+            },
+          },
+          { label: 'Page blocks' },
+        ),
+      },
+    }),
+
     services: collection({
       label: 'Services',
       slugField: 'title',

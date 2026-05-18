@@ -1,0 +1,48 @@
+---
+interface Props {
+  heading: string;
+  description: string | null;
+  buttonLabel: string | null;
+  buttonHref: string | null;
+  style: 'dark' | 'light' | 'accent';
+}
+const { heading, description, buttonLabel, buttonHref, style } = Astro.props;
+
+const styles = {
+  dark: {
+    section: 'bg-neutral-900',
+    heading: 'text-white',
+    desc: 'text-neutral-400',
+    btn: 'bg-white text-neutral-900 hover:bg-neutral-200',
+  },
+  light: {
+    section: 'bg-neutral-100',
+    heading: 'text-neutral-900',
+    desc: 'text-neutral-600',
+    btn: 'bg-neutral-900 text-white hover:bg-neutral-800',
+  },
+  accent: {
+    section: 'bg-gradient-to-br from-indigo-600 to-purple-600',
+    heading: 'text-white',
+    desc: 'text-indigo-100',
+    btn: 'bg-white text-indigo-700 hover:bg-indigo-50',
+  },
+}[style];
+---
+
+<section class={`border-t border-neutral-800 ${styles.section}`}>
+  <div class="mx-auto max-w-4xl px-6 py-20 text-center">
+    <h2 class={`text-3xl font-bold sm:text-4xl ${styles.heading}`}>{heading}</h2>
+    {description && <p class={`mx-auto mt-3 max-w-2xl text-lg ${styles.desc}`}>{description}</p>}
+    {buttonLabel && buttonHref && (
+      <div class="mt-8">
+        <a
+          href={buttonHref}
+          class={`inline-block rounded-md px-6 py-3 text-sm font-medium ${styles.btn}`}
+        >
+          {buttonLabel}
+        </a>
+      </div>
+    )}
+  </div>
+</section>

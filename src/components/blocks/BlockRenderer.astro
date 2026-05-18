@@ -1,0 +1,57 @@
+---
+import Hero from './Hero.astro';
+import Features from './Features.astro';
+import CTA from './CTA.astro';
+import RichText from './RichText.astro';
+import ImageBlock from './ImageBlock.astro';
+import FAQ from './FAQ.astro';
+import TestimonialPull from './TestimonialPull.astro';
+
+// The Keystatic blocks field stores each entry as a discriminated union:
+// { discriminant: '<blockKey>', value: { ...schema fields } }
+// At read time the reader API flattens this slightly; we accept the loose
+// shape here and route by `discriminant`.
+type Block = {
+  discriminant: string;
+  value: any;
+};
+
+interface Props {
+  blocks: ReadonlyArray<Block>;
+}
+const { blocks } = Astro.props;
+---
+
+{blocks.map((b) => {
+  switch (b.discriminant) {
+    case 'hero':
+      return <Hero {...b.value} />;
+    case 'features':
+      return (
+        <Features
+          heading={b.value.heading}
+          intro={b.value.intro}
+          columns={b.value.columns}
+          items={b.value.items}
+        />
+      );
+    case 'cta':
+      return <CTA {...b.value} />;
+    case 'richText':
+      return <RichText content={b.value.content} />;
+    case 'image':
+      return <ImageBlock {...b.value} />;
+    case 'faq':
+      return <FAQ heading={b.value.heading} items={b.value.items} />;
+    case 'testimonialPull':
+      return (
+        <TestimonialPull
+          heading={b.value.heading}
+          testimonials={b.value.testimonials}
+        />
+      );
+    default:
+      // Unknown block — render nothing (forward-compatible with newer schemas).
+      return null;
+  }
+})}

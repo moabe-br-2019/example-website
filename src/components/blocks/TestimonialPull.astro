@@ -1,0 +1,46 @@
+---
+import { reader } from '../../lib/keystatic';
+
+interface Props {
+  heading: string | null;
+  testimonials: ReadonlyArray<string | null>;
+}
+const { heading, testimonials } = Astro.props;
+
+const slugs = testimonials.filter((s): s is string => !!s);
+const entries = await Promise.all(
+  slugs.map(async (slug) => {
+    const t = await reader.collections.testimonials.read(slug);
+    return t ? { slug, ...t } : null;
+  }),
+);
+const visible = entries.filter((t): t is NonNullable<typeof t> => t !== null);
+---
+
+{visible.length > 0 && (
+  <section class="border-t border-neutral-800 bg-neutral-900/40">
+    <div class="mx-auto max-w-6xl px-6 py-20">
+      {heading && <h2 class="text-3xl font-semibold">{heading}</h2>}
+      <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {visible.map((t) => (
+          <figure class="rounded-lg border border-neutral-800 bg-neutral-950 p-6">
+            <blockquote class="text-neutral-200">
+              <p>"{t.quote}"</p>
+            </blockquote>
+            <figcaption class="mt-4 flex items-center gap-3">
+              {t.avatar && (
+                <img src={t.avatar} alt="" class="h-10 w-10 rounded-full object-cover" />
+              )}
+              <div class="text-sm">
+                <div class="font-medium text-neutral-100">{t.author}</div>
+                <div class="text-neutral-500">
+                  {t.role}{t.role && t.company ? ' · ' : ''}{t.company}
+                </div>
+              </div>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

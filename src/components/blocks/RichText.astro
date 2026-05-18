@@ -1,0 +1,21 @@
+---
+import Markdoc from '@markdoc/markdoc';
+
+interface Props {
+  // Keystatic markdoc field returns { node }
+  content: unknown;
+}
+const { content } = Astro.props;
+
+const node = (content as any)?.node ?? content;
+const transformed = Markdoc.transform(node as any);
+const html = Markdoc.renderers.html(transformed);
+---
+
+<section class="border-t border-neutral-800">
+  <div class="mx-auto max-w-3xl px-6 py-16">
+    <article class="prose prose-invert max-w-none">
+      <Fragment set:html={html} />
+    </article>
+  </div>
+</section>

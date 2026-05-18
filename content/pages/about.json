@@ -1,0 +1,63 @@
+{
+  "title": "About us",
+  "slug": "about",
+  "seo": {
+    "description": "Meet the team building modern web experiences for ambitious brands.",
+    "ogImage": null,
+    "noindex": false
+  },
+  "blocks": [
+    {
+      "discriminant": "hero",
+      "value": {
+        "heading": "We build the web with intent",
+        "subheading": "A small team obsessed with performance, accessibility, and the craft of shipping software that earns trust.",
+        "ctaPrimary": { "label": "Start a project", "href": "/contact" },
+        "ctaSecondary": { "label": "See our work", "href": "/projects" },
+        "backgroundImage": null
+      }
+    },
+    {
+      "discriminant": "features",
+      "value": {
+        "heading": "How we work",
+        "intro": "Three principles that guide every project.",
+        "columns": "3",
+        "items": [
+          {
+            "icon": "compass",
+            "title": "Strategy first",
+            "description": "We start with the business outcome, not the feature list. Every decision traces back to a measurable goal."
+          },
+          {
+            "icon": "code",
+            "title": "Ship small, ship often",
+            "description": "We prefer weekly releases over quarterly rewrites. Feedback loops beat predictions."
+          },
+          {
+            "icon": "heart",
+            "title": "Built to last",
+            "description": "We choose boring, proven tech and write code your future team will thank us for."
+          }
+        ]
+      }
+    },
+    {
+      "discriminant": "testimonialPull",
+      "value": {
+        "heading": "What clients say",
+        "testimonials": ["maria-silva"]
+      }
+    },
+    {
+      "discriminant": "cta",
+      "value": {
+        "heading": "Ready to talk?",
+        "description": "Tell us about your project — we reply within 1 business day.",
+        "buttonLabel": "Get in touch",
+        "buttonHref": "/contact",
+        "style": "accent"
+      }
+    }
+  ]
+}

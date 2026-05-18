@@ -1,0 +1,54 @@
+---
+export const prerender = true;
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BlockRenderer from '../components/blocks/BlockRenderer.astro';
+import { reader } from '../lib/keystatic';
+
+export async function getStaticPaths() {
+  // Slugs reserved by static routes — pages with these slugs are silently skipped.
+  const RESERVED = new Set([
+    'services',
+    'projects',
+    'contact',
+    'approve',
+    'api',
+    'keystatic',
+    '_astro',
+  ]);
+  const pages = await reader.collections.pages.all();
+  return pages
+    .filter((p) => !RESERVED.has(p.slug))
+    .map((p) => ({ params: { slug: p.slug }, props: { entry: p.entry } }));
+}
+
+const { entry } = Astro.props as { entry: any };
+
+const blocks = (entry.blocks ?? []) as Array<{ discriminant: string; value: any }>;
+const seo = entry.seo ?? {};
+---
+
+<BaseLayout title={entry.title} description={seo.description ?? undefined}>
+  {seo.noindex && <meta name="robots" content="noindex" slot="head" />}
+
+  <header class="border-b border-neutral-800">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+      <a href="/" class="text-lg font-semibold">Home</a>
+      <nav class="flex gap-6 text-sm text-neutral-300">
+        <a href="/services" class="hover:text-white">Services</a>
+        <a href="/projects" class="hover:text-white">Projects</a>
+        <a href="/contact" class="hover:text-white">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <BlockRenderer blocks={blocks} />
+  </main>
+
+  <footer class="border-t border-neutral-800">
+    <div class="mx-auto max-w-6xl px-6 py-10 text-sm text-neutral-500">
+      © {new Date().getFullYear()}
+    </div>
+  </footer>
+</BaseLayout>

@@ -1,0 +1,38 @@
+---
+interface Props {
+  heading: string | null;
+  intro: string | null;
+  columns: '2' | '3' | '4';
+  items: ReadonlyArray<{
+    icon: string | null;
+    title: string | null;
+    description: string | null;
+  }>;
+}
+const { heading, intro, columns, items } = Astro.props;
+const gridClass = {
+  '2': 'sm:grid-cols-2',
+  '3': 'sm:grid-cols-2 lg:grid-cols-3',
+  '4': 'sm:grid-cols-2 lg:grid-cols-4',
+}[columns];
+---
+
+<section class="border-t border-neutral-800 bg-neutral-900/40">
+  <div class="mx-auto max-w-6xl px-6 py-20">
+    {heading && <h2 class="text-3xl font-semibold">{heading}</h2>}
+    {intro && <p class="mt-2 max-w-2xl text-neutral-400">{intro}</p>}
+    <div class={`mt-10 grid gap-6 ${gridClass}`}>
+      {items.map((item) => (
+        <article class="rounded-lg border border-neutral-800 bg-neutral-950 p-6">
+          {item.icon && (
+            <div class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-md bg-neutral-800 text-xs uppercase text-neutral-300">
+              {item.icon.slice(0, 2)}
+            </div>
+          )}
+          {item.title && <h3 class="text-lg font-semibold">{item.title}</h3>}
+          {item.description && <p class="mt-2 text-sm text-neutral-400">{item.description}</p>}
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
